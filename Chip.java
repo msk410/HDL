@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hdl;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -94,54 +89,32 @@ public class Chip {
             p.initNameInOut(code, userChip);
             p.initParts(code, userChip);
             userChip.chipName = chip.chipName; 
-            int outPosition = 0, inPosition = 0;
+            int outPosition = 0, inPosition = 0, bitPosition = 0;
             //set the inputs for the user chip
             for(InOut userInput : userChip.inputs.values()) {
                 
                 if(userInput.index == -1) { //single bit
+                    //check in inputs
                     userInput.value = getValue(chip.inputs.
                             get(userInput.arrayName).name, userInput.name, chip);
+                    //check in outputs
                 }
-                else {
+                else { //multibit
+                    
                     String value = "";
-                    outPosition = userInput.index - chip.inputs.get(userInput.arrayName).index -1;
-                    System.out.println(chip.inputs);
-                    System.out.println(inPosition + " here");
                     if(userInput.value.equals("temp")) {
                         userInput.value = new String(new char[userInput.index]).replace("\0", "0");
                         char[] temp = userInput.value.toCharArray();
-                        if(this.inputs.containsKey(userInput.arrayName)) {
-                            System.out.println(this.inputs.get(userInput.arrayName).value);
+                        for(InOut t : chip.inputs.values()) {
+                            if(t.arrayName.equals(userInput.arrayName)) {
+                                //check in inputs
+                                temp[t.index] = new StringBuilder(this.inputs.get(t.arrayName).value).reverse().toString().charAt(t.index);
+                            }                            
                         }
-                        
-                        
-                        //temp[inPosition] = getValue(chip.inputs.get(userInput.arrayName).name, userInput.arrayName, chip).charAt(0);
-  
+                        userInput.value = new StringBuilder(new String(temp)).reverse().toString();
                     }
                 }
-            }/*              
-                else { //multibit
-                    char[] temp;
-                    int inPosition = userInput.index -
-                            chip.inputs.get(userInput.arrayName).index -1;
-                    if(userInput.value.equals("temp")) {
-                        userInput.value = new String(new char[userInput.index]).replace("\0", "0");
-                        temp = userInput.value.toCharArray();
-                        temp[inPosition] = getValue(chip.inputs.get(userInput.arrayName).name, userInput.arrayName, chip).charAt(0);
-                        userInput.value = String.valueOf(temp);
-                        System.out.println(userInput.arrayName + ": " + userInput.value);
-                        userChip.inputs.put("sel", userInput);
-                    }
-                    else {
-                        System.out.println("wtf?");
-                        temp = userInput.value.toCharArray();
-                        temp[inPosition] = getValue(chip.inputs.get(userInput.arrayName).name, userInput.arrayName, chip).charAt(0);
-                        userInput.value = String.valueOf(temp);
-                       // userChip.outputs.put(userInput.name, userInput);
-                    }
-                }
-            }*/
-            
+            }            
             List<String> originalOutputs = new ArrayList<>();
             for(String ogOut : chip.outputs.keySet()) { //get original outputs and leave out any intermediate outputs
                 originalOutputs.add(ogOut);

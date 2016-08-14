@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hdl;
 
 import java.io.*;
@@ -29,7 +24,6 @@ public class HDL {
         myParser.initNameInOut(code, myChip);
         myParser.initParts(code, myChip);
         getInputs(myChip);
-  //      System.out.println(myChip.chipParts.get(0).inputs);
         myChip.evalChip();
         System.out.println("***OUTPUTS***");
         Iterator it = myChip.outputs.entrySet().iterator();
@@ -38,7 +32,6 @@ public class HDL {
             InOut temp = entry.getValue();
             System.out.println(temp.name + " " + temp.value);
         }
-        
     }
     public static void getInputs(Chip myChip) {
         Iterator it = myChip.inputs.entrySet().iterator();

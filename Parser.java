@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hdl;
 
 import java.io.BufferedReader;
@@ -17,7 +12,7 @@ import java.util.regex.Pattern;
  */
 public class Parser {
     public String readFile(Chip myChip, String name) { //reads the file
-        URL path = HDL.class.getResource(name); //testing nand.hdl
+        URL path = HDL.class.getResource(name);
         
         String line = "";
         String text = "";
@@ -97,15 +92,14 @@ public class Parser {
                 }
                 for(String t: temp) { //initialize each chips ins  
                     if(tempChip.chipName.equals("And") || tempChip.chipName.equals("Or") ) { //and/or chip
-                        String inPattern = "((a|b)(\\[\\d+\\])?)=((\\w+)(\\[\\d+\\])?)";
+                      String inPattern = "((a|b)(\\[\\d+\\])?)\\s*=((\\w+)(\\[\\d+\\])?)";
                         re = Pattern.compile(inPattern);
                         ma = re.matcher(t);
                         while(ma.find()) {
-                          //  InOut inOut = new InOut(ma.group(1), ma.group(4));
                             InOut inOut = new InOut(ma.group(4), "temp");
                             tempChip.inputs.put(ma.group(1), inOut);
                         }
-                        String outPattern = "out=((\\w+)(\\[\\d+\\])?)";
+                        String outPattern = "out\\s*=((\\w+)(\\[\\d+\\])?)";
                         re = Pattern.compile(outPattern);
                         ma = re.matcher(t);
                         while(ma.find()) {
@@ -138,11 +132,11 @@ public class Parser {
                         //if(userChip.inputs.containsKey(t.split("=")[0].trim())) {
                         if(userChip.inputs.containsKey(var.split("\\[")[0])) {
                             inOut = new InOut(assign, "temp");
-                            tempChip.inputs.put(var.split("\\[")[0], inOut);
+                            tempChip.inputs.put(var, inOut);
                         }
                         else if(userChip.outputs.containsKey(var.split("\\[")[0].trim())) {
                             inOut = new InOut(assign, "temp");
-                            tempChip.outputs.put(var.split("\\[")[0], inOut);
+                            tempChip.outputs.put(var, inOut);
                         }
                         
                     }
